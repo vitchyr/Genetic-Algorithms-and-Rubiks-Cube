@@ -40,4 +40,12 @@ public class Nonogram {
         Nonogram nonogram = new Nonogram(rowHeaders, columnHeaders);
         return nonogram;
     }
+    
+    public List getColumnHeaders() {
+        return columnHeaders;
+    }
+
+    public List getRowHeaders() {
+        return rowHeaders;
+    }
 }
