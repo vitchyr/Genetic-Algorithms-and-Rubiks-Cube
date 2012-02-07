@@ -16,7 +16,7 @@ public class Window extends JFrame {
        
         pack();
         setVisible(true);
-
+        setResizable(false);
     }
     
     public void setNonogram(Nonogram nonogram){
