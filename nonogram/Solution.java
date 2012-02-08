@@ -3,7 +3,7 @@ package nonogram;
 import java.util.Random;
 
 public class Solution{
-    private Boolean[][] potentialSol;
+    private boolean[][] potentialSol;
     private int rNum, cNum;
     private Nonogram nonogram;
     
@@ -12,15 +12,15 @@ public class Solution{
         cNum = nonogram.getColumnHeaders().size();
         this.nonogram = nonogram;
         
-        potentialSol = new Boolean[rNum][cNum];
+        potentialSol = new boolean[rNum][cNum];
         generateSol();
     }
     
     public void generateSol(){
         Random randGen = new Random();
         
-        for (Boolean[] array : potentialSol){
-            for (Boolean block : array){
+        for (boolean[] array : potentialSol){
+            for (boolean block : array){
                 block = randGen.nextBoolean();
             }
         }        
@@ -33,5 +33,9 @@ public class Solution{
 
     public Nonogram getNonogram() {
         return nonogram;
+    }
+    
+    public boolean[][] getPotentialSol(){
+        return potentialSol;
     }
 }
