@@ -4,27 +4,27 @@ import java.util.*;
 
 public class Nonogram {
 
-    List rowHeaders, columnHeaders;
+    ArrayList<ArrayList<Integer>> rowHeaders, columnHeaders;
 
-    public Nonogram(List rowHeaders, List columnHeaders) {
+    public Nonogram(ArrayList rowHeaders, ArrayList columnHeaders) {
         this.rowHeaders = rowHeaders;
         this.columnHeaders = columnHeaders;
     }
 
     public static Nonogram fromFile(String text) {
-        ArrayList rowHeaders = new ArrayList();
-        ArrayList columnHeaders = new ArrayList();
+        ArrayList<ArrayList> rowHeaders = new ArrayList();
+        ArrayList<ArrayList> columnHeaders = new ArrayList();
 
         String[] headerSets = text.split("=");
 
-        ArrayList currentHeaders = rowHeaders;
+        List currentHeaders = rowHeaders;
         for (String headerSet : headerSets) {
 
             //split tries to interpret the pipe as a regex!
             String[] headers = headerSet.split("\\|");
          
             for (String headerString : headers) {
-                ArrayList header = new ArrayList();
+                List header = new ArrayList();
                 String[] numberStrings = headerString.split(",");
                 
                 for(String numberString : numberStrings){
@@ -41,11 +41,11 @@ public class Nonogram {
         return nonogram;
     }
     
-    public List getColumnHeaders() {
+    public ArrayList<ArrayList<Integer>> getColumnHeaders() {
         return columnHeaders;
     }
 
-    public List getRowHeaders() {
+    public ArrayList<ArrayList<Integer>> getRowHeaders() {
         return rowHeaders;
     }
 }
