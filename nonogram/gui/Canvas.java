@@ -7,11 +7,12 @@ import java.awt.Graphics;
 
 import java.util.*;
 
-import nonogram.Nonogram;
+import nonogram.*;
 
 public class Canvas extends JPanel {
 
     Nonogram nonogram;
+    Solution solution;
     int SQ_WIDTH = 20;
     int LABEL_WIDTH = 60;
     int LABEL_HEIGHT = 70;
@@ -39,14 +40,34 @@ public class Canvas extends JPanel {
         int x = LABEL_WIDTH;
         int y = LABEL_HEIGHT;
 
-        g.setColor(Color.GRAY);
+        if (solution != null) {
+            g.setColor(Color.BLACK);
+            for (int i = 0; i < nonogram.getColumnHeaders().size(); i++) {
 
+                for (int j = 0; j < nonogram.getRowHeaders().size(); j++) {
+
+                    if (solution.getPotentialSol()[i][j]) {
+                        g.fillRect(x + 2, y + 2, SQ_WIDTH - 3, SQ_WIDTH - 3);
+                        y += SQ_WIDTH;
+                    }
+                }
+
+                x += SQ_WIDTH;
+                y = LABEL_HEIGHT;
+            }
+        }
+
+        x = LABEL_WIDTH;
+        y = LABEL_HEIGHT;
+
+        g.setColor(Color.GRAY);
         for (ArrayList<Integer> header : nonogram.getColumnHeaders()) {
+            g.setColor(Color.GRAY);
             g.drawLine(x, 0, x, getBounds().height);
 
             int step = 15;
             int yLabel = 15;
-            
+
             for (Integer number : header) {
                 g.drawString(number.toString(), x + 6, yLabel);
                 yLabel += step;
@@ -60,16 +81,21 @@ public class Canvas extends JPanel {
             y += SQ_WIDTH;
 
             String label = "";
-            
+
             for (Integer number : header) {
                 label += number.toString() + " ";
             }
-            
+
             g.drawString(label, 5, y - 5);
         }
 
+    }
 
+    public void setSolution(Solution solution) {
+        this.solution = solution;
+    }
 
-
+    public Nonogram getNonogram() {
+        return nonogram;
     }
 }

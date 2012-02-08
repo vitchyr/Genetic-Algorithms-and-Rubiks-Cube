@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
 
-import nonogram.Nonogram;
+import nonogram.*;
 
 public class Window extends JFrame {
     
@@ -29,6 +29,11 @@ public class Window extends JFrame {
     public void setNonogram(Nonogram nonogram){
         canvas.setNonogram(nonogram);
         pack();
+    }
+    
+    public void setSolution(Solution solution){
+        assert(solution.getNonogram() == canvas.getNonogram());
+        canvas.setSolution(solution);
     }
     
     public void setLabelText(String message, int generation){
