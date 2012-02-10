@@ -74,7 +74,7 @@ public class Main {
             }
         }
         
-        
+        population = newPopulation;
     }
 
     public int getWeightedRandom(int[] weights) {

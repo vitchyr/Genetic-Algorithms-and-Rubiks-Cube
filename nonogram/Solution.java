@@ -27,17 +27,25 @@ public class Solution implements Comparable<Solution> {
     }
 
     //work to do
-    public Solution[] crossover(Solution solution, float random) {       
+    public Solution[] crossover(Solution solution, float random) {
         Solution[] offspring = new Solution[2];
 
-        for (int i = 0; i < this.potentialSol.length; i++) {
-            for (int j = 0; j < this.potentialSol[i].length; j++) {
-                offspring[0].getPotentialSol()[i][j] = this.potentialSol[i][j];
-                offspring[1].getPotentialSol()[i][j] = 
-                    solution.getPotentialSol()[i][j];
+        for (int i = 0; i < potentialSol.length; i++) {
+            for (int j = 0; j < potentialSol[i].length; j++) {
+
+                if (random < (float) ((i * j) / (potentialSol.length
+                        * potentialSol[i].length))) {
+                    offspring[0].getPotentialSol()[i][j] = this.potentialSol[i][j];
+                    offspring[1].getPotentialSol()[i][j] =
+                            solution.getPotentialSol()[i][j];
+                } else {
+                    offspring[1].getPotentialSol()[i][j] = this.potentialSol[i][j];
+                    offspring[0].getPotentialSol()[i][j] =
+                            solution.getPotentialSol()[i][j];
+                }
             }
         }
-        
+
         return offspring;
     }
 
