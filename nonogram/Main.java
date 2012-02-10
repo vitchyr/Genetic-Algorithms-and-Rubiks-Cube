@@ -19,32 +19,29 @@ public class Main {
     static final int ELITE_SIZE = 2;
 
     public Main() {
-        Nonogram nonogram = nonogramFromFile("puzzles/test1.dat");
+        Nonogram nonogram = nonogramFromFile("test1");
         random = new Random();
 
         window = new Window();
         window.setNonogram(nonogram);
+    }
 
+    public void start() {        
         population = new ArrayList();
         for (int i = 0; i < POP_SIZE; i++) {
-            Solution solution = new Solution(nonogram);
+            Solution solution = new Solution(window.getNonogram());
             solution.generateRandomSol();
 
             population.add(solution);
         }
-
-        //temporary
-        start();
-    }
-
-    public void start() {
+        
         int gen = 0;
         while (true) {
             doGeneration();
             window.setSolution(population.get(0));
 
             gen++;
-            window.setLabelText("", gen);
+            window.setLabelText(gen, population.get(0).getFitness());
         }
     }
 
@@ -108,13 +105,13 @@ public class Main {
         return -1;
     }
 
-    public static Nonogram nonogramFromFile(String path) {
+    public static Nonogram nonogramFromFile(String name) {
         Nonogram nonogram = null;
 
         try {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(
-                    Main.class.getResourceAsStream(path)));
+                    Main.class.getResourceAsStream("puzzles/" + name + ".dat")));
 
             String line;
             while ((line = br.readLine()) != null) {

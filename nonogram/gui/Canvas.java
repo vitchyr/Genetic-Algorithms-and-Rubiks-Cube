@@ -30,12 +30,16 @@ public class Canvas extends JPanel {
         int panelHeight = gridHeight + LABEL_HEIGHT;
 
         setPreferredSize(new Dimension(panelWidth, panelHeight));
+        repaint();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getBounds().width, getBounds().height);
+        
+        int xMax = LABEL_WIDTH + nonogram.getColumnHeaders().size() * SQ_WIDTH;
+        int yMax = LABEL_HEIGHT + nonogram.getRowHeaders().size() * SQ_WIDTH;
 
         int x = LABEL_WIDTH;
         int y = LABEL_HEIGHT;
@@ -46,10 +50,10 @@ public class Canvas extends JPanel {
 
                 for (int j = 0; j < nonogram.getRowHeaders().size(); j++) {
 
-                    if (solution.getPotentialSol()[i][j]) {
+                    if (solution.getPotentialSol()[j][i]) {
                         g.fillRect(x + 2, y + 2, SQ_WIDTH - 3, SQ_WIDTH - 3);
-                        y += SQ_WIDTH;
                     }
+                    y += SQ_WIDTH;
                 }
 
                 x += SQ_WIDTH;
@@ -63,7 +67,7 @@ public class Canvas extends JPanel {
         g.setColor(Color.GRAY);
         for (ArrayList<Integer> header : nonogram.getColumnHeaders()) {
             g.setColor(Color.GRAY);
-            g.drawLine(x, 0, x, getBounds().height);
+            g.drawLine(x, 0, x, yMax);
 
             int step = 15;
             int yLabel = 15;
@@ -75,9 +79,10 @@ public class Canvas extends JPanel {
 
             x += SQ_WIDTH;
         }
+        g.drawLine(x, 0, x, yMax);
 
         for (ArrayList<Integer> header : nonogram.getRowHeaders()) {
-            g.drawLine(0, y, getBounds().width, y);
+            g.drawLine(0, y, xMax, y);
             y += SQ_WIDTH;
 
             String label = "";
@@ -88,11 +93,14 @@ public class Canvas extends JPanel {
 
             g.drawString(label, 5, y - 5);
         }
-
+        g.drawLine(0, y, xMax, y);
+        
     }
 
     public void setSolution(Solution solution) {
         this.solution = solution;
+        solution.evaluate();
+        this.repaint();
     }
 
     public Nonogram getNonogram() {

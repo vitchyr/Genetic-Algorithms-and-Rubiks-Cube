@@ -1,50 +1,69 @@
 package nonogram.gui;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.*;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import nonogram.*;
 
 public class Window extends JFrame {
-    
+
     Canvas canvas;
     JLabel label;
-    
-    public Window(){
+    JPanel panel, buttonPanel;
+    JButton startButton, loadButton;
+    JTextField textfield;
+
+    public Window() {
         super("Nonogram Genetic Algorithm");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         canvas = new Canvas();
         getContentPane().add(canvas, BorderLayout.CENTER);
         
-        label = new JLabel();
-        getContentPane().add(label, BorderLayout.SOUTH);
+        panel = new JPanel();
+        getContentPane().add(panel, BorderLayout.SOUTH);
+
+        label = new JLabel("Press start to begin");
+        panel.add(label, BorderLayout.CENTER);
         
+        buttonPanel = new JPanel();               
+        buttonPanel.setPreferredSize(new Dimension(400, 50));
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        startButton = new JButton("Start");
+        buttonPanel.add(startButton, BorderLayout.WEST);
+        
+        loadButton = new JButton("Load:");
+        buttonPanel.add(loadButton, BorderLayout.CENTER);
+        
+        textfield = new JTextField(10);
+        buttonPanel.add(textfield, BorderLayout.CENTER);
+
+
+        setPreferredSize(new Dimension(400, 400));
         pack();
         setVisible(true);
-        setResizable(false);
     }
-    
-    public void setNonogram(Nonogram nonogram){
+
+    public void setNonogram(Nonogram nonogram) {
         canvas.setNonogram(nonogram);
         pack();
     }
     
-    public void setSolution(Solution solution){
-        assert(solution.getNonogram() == canvas.getNonogram());
+    public Nonogram getNonogram(){
+        return canvas.getNonogram();
+    }
+
+    public void setSolution(Solution solution) {
+        assert (solution.getNonogram() == canvas.getNonogram());
         canvas.setSolution(solution);
     }
-    
-    public void setLabelText(String message, int generation){
-        String genString = "Gen: " + Integer.toString(generation);
-        
-        if(!message.equals("")){
-            label.setText(message + " --- " + genString);
-        } else {
-            label.setText(genString);
-        }
-        
-        
+
+    public void setLabelText(int gen, int fitness) {
+        label.setText("Generation: " + Integer.toString(gen) + "   " +
+            "Highest fitness: " + Integer.toString(fitness));
+
+        pack();
     }
 }
