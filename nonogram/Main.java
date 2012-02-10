@@ -7,30 +7,45 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 public class Main {
 
     ArrayList<Solution> population;
     Random random;
-    int POP_SIZE = 50;
-    int ELITE_SIZE = 2;
+    Window window;
+    static final int POP_SIZE = 50;
+    static final int ELITE_SIZE = 2;
 
     public Main() {
         Nonogram nonogram = nonogramFromFile("puzzles/test1.dat");
         random = new Random();
 
-        Window window = new Window();
+        window = new Window();
         window.setNonogram(nonogram);
 
+        population = new ArrayList();
         for (int i = 0; i < POP_SIZE; i++) {
             Solution solution = new Solution(nonogram);
-            solution.generateSol();
+            solution.generateRandomSol();
 
             population.add(solution);
         }
 
-        doGeneration();
+        //temporary
+        start();
+    }
+
+    public void start() {
+        int gen = 0;
+        while (true) {
+            doGeneration();
+            window.setSolution(population.get(0));
+
+            gen++;
+            window.setLabelText("", gen);
+        }
     }
 
     public void doGeneration() {
@@ -38,16 +53,13 @@ public class Main {
             solution.evaluate();
         }
 
-        Collections.sort(population);
+        Comparator comparator = Collections.reverseOrder();
+        Collections.sort(population, comparator);
 
         ArrayList<Solution> newPopulation = new ArrayList();
 
         //Elitism
         for (int i = 0; i < ELITE_SIZE; i++) {
-            if(population.get(i).getFitness() == 1){
-                System.out.println("Done");
-            }
-            
             newPopulation.add(population.get(i));
             population.remove(i);
         }
@@ -57,7 +69,6 @@ public class Main {
             weights[i] = population.get(i).getFitness();
         }
 
-
         crossover:
         while (true) {
             Solution parent1 = population.get(getWeightedRandom(weights));
@@ -66,14 +77,15 @@ public class Main {
             Solution[] offspring = parent1.crossover(parent2, random.nextFloat());
 
             for (int i = 0; i < 2; i++) {
+                offspring[i].mutate();
                 newPopulation.add(offspring[i]);
-                
-                if(newPopulation.size() == POP_SIZE - ELITE_SIZE){
+
+                if (newPopulation.size() == POP_SIZE - ELITE_SIZE) {
                     break crossover;
                 }
             }
         }
-        
+
         population = newPopulation;
     }
 
