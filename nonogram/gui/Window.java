@@ -3,19 +3,24 @@ package nonogram.gui;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import nonogram.*;
 
-public class Window extends JFrame {
+public class Window extends JFrame implements ActionListener {
 
-    Canvas canvas;
-    JLabel label;
+    Main main;
+    final Canvas canvas;
+    final JLabel label;
     JPanel panel, buttonPanel;
     JButton startButton, loadButton;
     JTextField textfield;
 
-    public Window() {
+    public Window(Main main) {
         super("Nonogram Genetic Algorithm");
+        this.main = main;
+        
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         canvas = new Canvas();
@@ -32,6 +37,8 @@ public class Window extends JFrame {
         panel.add(buttonPanel, BorderLayout.SOUTH);
         
         startButton = new JButton("Start");
+        startButton.addActionListener(this);
+        startButton.setActionCommand("start");
         buttonPanel.add(startButton, BorderLayout.WEST);
         
         loadButton = new JButton("Load:");
@@ -39,7 +46,6 @@ public class Window extends JFrame {
         
         textfield = new JTextField(10);
         buttonPanel.add(textfield, BorderLayout.CENTER);
-
 
         setPreferredSize(new Dimension(400, 400));
         pack();
@@ -65,5 +71,23 @@ public class Window extends JFrame {
             "Highest fitness: " + Integer.toString(fitness));
 
         pack();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        switch (event.getActionCommand()) {
+            case "start":
+                main.startWorker(canvas.getSolution());
+                startButton.setText("Stop");
+                startButton.setActionCommand("stop");
+                break;
+            case "stop":
+                main.cancelWorker();
+                startButton.setText("Start");
+                startButton.setActionCommand("start");
+                break;
+            case "load":
+                break;
+        }
     }
 }

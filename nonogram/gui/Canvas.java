@@ -50,7 +50,7 @@ public class Canvas extends JPanel {
 
                 for (int j = 0; j < nonogram.getRowHeaders().size(); j++) {
 
-                    if (solution.getPotentialSol()[j][i]) {
+                    if (solution.getArray()[j][i]) {
                         g.fillRect(x + 2, y + 2, SQ_WIDTH - 3, SQ_WIDTH - 3);
                     }
                     y += SQ_WIDTH;
@@ -101,6 +101,10 @@ public class Canvas extends JPanel {
         this.solution = solution;
         solution.evaluate();
         this.repaint();
+    }
+    
+    public Solution getSolution(){
+        return solution;
     }
 
     public Nonogram getNonogram() {

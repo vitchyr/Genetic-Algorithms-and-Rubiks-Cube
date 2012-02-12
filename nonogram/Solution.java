@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Solution implements Comparable<Solution> {
 
-    private boolean[][] potentialSol;
+    private boolean[][] array;
     private int rNum, cNum;
     private Nonogram nonogram;
     int fitness = -1;
@@ -14,22 +14,22 @@ public class Solution implements Comparable<Solution> {
     public static final int WEIGHT_RIGHT_SIZE = 5;
     public static final int WEIGHT_RIGHT_VALUE = 1;
     public static final int WEIGHT_RIGHT_TOTAL = 1;
-    public static double MUTATION_RATE = .10;
+    public static double MUTATION_RATE = .1;
 
     public Solution(Nonogram nonogram) {
         rNum = nonogram.getRowHeaders().size();
         cNum = nonogram.getColumnHeaders().size();
         this.nonogram = nonogram;
 
-        potentialSol = new boolean[rNum][cNum];
+        array = new boolean[rNum][cNum];
     }
 
     public void generateRandomSol() {
         Random randGen = new Random();
 
-        for (int r = 0; r < potentialSol.length; r++) {
-            for (int c = 0; c < potentialSol.length; c++) {
-                potentialSol[r][c] = randGen.nextBoolean();
+        for (int r = 0; r < array.length; r++) {
+            for (int c = 0; c < array.length; c++) {
+                array[r][c] = randGen.nextBoolean();
             }
         }
     }
@@ -37,10 +37,10 @@ public class Solution implements Comparable<Solution> {
     public void mutate() {
         Random randGen = new Random();
 
-        for (int r = 0; r < potentialSol.length; r++) {
-            for (int c = 0; c < potentialSol.length; c++) {
+        for (int r = 0; r < array.length; r++) {
+            for (int c = 0; c < array.length; c++) {
                 if (randGen.nextDouble() < MUTATION_RATE) {
-                    potentialSol[r][c] = !potentialSol[r][c];
+                    array[r][c] = !array[r][c];
                 }
             }
         }
@@ -59,18 +59,18 @@ public class Solution implements Comparable<Solution> {
         //switch the parent-offspring matching when a random crossover
         //point is reached
 
-        for (int i = 0; i < potentialSol.length; i++) {
-            for (int j = 0; j < potentialSol[i].length; j++) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
 
-                if (random > (float) ((i * j) / (potentialSol.length
-                        * potentialSol[i].length))) {
-                    offspring[0].getPotentialSol()[i][j] = this.potentialSol[i][j];
-                    offspring[1].getPotentialSol()[i][j] =
-                            solution.getPotentialSol()[i][j];
+                if (random > (float) ((i * j) / (array.length
+                        * array[i].length))) {
+                    offspring[0].getArray()[i][j] = this.array[i][j];
+                    offspring[1].getArray()[i][j] =
+                            solution.getArray()[i][j];
                 } else {
-                    offspring[1].getPotentialSol()[i][j] = this.potentialSol[i][j];
-                    offspring[0].getPotentialSol()[i][j] =
-                            solution.getPotentialSol()[i][j];
+                    offspring[1].getArray()[i][j] = this.array[i][j];
+                    offspring[0].getArray()[i][j] =
+                            solution.getArray()[i][j];
                 }
             }
         }
@@ -91,12 +91,12 @@ public class Solution implements Comparable<Solution> {
         ArrayList<ArrayList<Integer>> col = nonogram.getColumnHeaders();
 
         // If looking at each row, then look at each row score
-        for (int a = 0; a < potentialSol.length; a++) {
-            fitness += getScore(row.get(a), potentialSol[a]);
+        for (int a = 0; a < array.length; a++) {
+            fitness += getScore(row.get(a), array[a]);
         }
 
-        for (int b = 0; b < potentialSol[0].length; b++) {
-            fitness += getScore(col.get(b), getCol(potentialSol, b));
+        for (int b = 0; b < array[0].length; b++) {
+            fitness += getScore(col.get(b), getCol(array, b));
         }
 
         return fitness;
@@ -115,16 +115,16 @@ public class Solution implements Comparable<Solution> {
         // REWARD FOR CORRECT TOTAL 
         for (int a = 0; a < arrayList.size(); a++) {
             if (getSum(bs) == getSum(arrayList)) {
-               score += WEIGHT_RIGHT_TOTAL;
+                score += WEIGHT_RIGHT_TOTAL;
             }
         }
 
         // REWARD FOR HAVING RIGHT SIZE CLUMPS 
         for (int b = 0; b < arrayList.size(); b++) {
             if (b < bsList.size()) {
-                score += (arrayList.get(b) - 
-                        Math.abs(arrayList.get(b) - bsList.get(b))) *
-                        WEIGHT_RIGHT_VALUE;
+                score += (arrayList.get(b)
+                        - Math.abs(arrayList.get(b) - bsList.get(b)))
+                        * WEIGHT_RIGHT_VALUE;
             }
         }
 
@@ -153,9 +153,9 @@ public class Solution implements Comparable<Solution> {
 
     //Get column b of a boolean[][]
     private boolean[] getCol(boolean[][] pS, int b) {
-        boolean[] c = new boolean[potentialSol[0].length];
-        for (int a = 0; a < potentialSol[0].length; a++) {
-            c[a] = potentialSol[a][b];
+        boolean[] c = new boolean[array[0].length];
+        for (int a = 0; a < array[0].length; a++) {
+            c[a] = array[a][b];
         }
 
         return c;
@@ -189,8 +189,12 @@ public class Solution implements Comparable<Solution> {
         return nonogram;
     }
 
-    public boolean[][] getPotentialSol() {
-        return potentialSol;
+    public boolean[][] getArray() {
+        return array;
+    }
+    
+        public void setArray(boolean[][] array) {
+        this.array = array;
     }
 
     public int getFitness() {
