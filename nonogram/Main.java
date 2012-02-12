@@ -58,7 +58,6 @@ public class Main {
         //Elitism
         for (int i = 0; i < ELITE_SIZE; i++) {
             newPopulation.add(population.get(i));
-            population.remove(i);
         }
 
         int[] weights = new int[population.size()];
