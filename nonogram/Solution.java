@@ -222,23 +222,23 @@ public class Solution implements Comparable<Solution> {
 
 	// Calculate and return fitness of solution
 	public int generateMaxFitness() {
-		fitness = 0;
+		int f = 0;
 
 		ArrayList<ArrayList<Integer>> row = nonogram.getRowHeaders();
 		ArrayList<ArrayList<Integer>> col = nonogram.getColumnHeaders();
 
 		// If looking at each row, then look at each row score
 		for (int a = 0; a < array.length; a++) {
-			fitness += getMaxScore(row.get(a), array[a]);
+			f += getMaxScore(row.get(a), array[a]);
 		}
 
 		for (int b = 0; b < array[0].length; b++) {
-			fitness += getMaxScore(col.get(b), getCol(array, b));
+			f += getMaxScore(col.get(b), getCol(array, b));
 		}
 
-		fitness = fitness;
+//		fitness = fitness;
 
-		return fitness;
+		return f;
 	}
 
 	private int getMaxScore(ArrayList<Integer> arrayList, boolean[] bs) {

@@ -50,7 +50,7 @@ public class Main {
 
         @Override
         public Void doInBackground() {
-            while (!cancelTask) {
+            while (!cancelTask && !haveSolution()) {
                 doGeneration();
                 gen++;
 
