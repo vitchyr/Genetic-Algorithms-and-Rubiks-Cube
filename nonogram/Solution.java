@@ -22,10 +22,11 @@ public class Solution implements Comparable<Solution> {
 		rNum = nonogram.getRowHeaders().size();
 		cNum = nonogram.getColumnHeaders().size();
 		this.nonogram = nonogram;
-
+		
+		array = new boolean[rNum][cNum];
 		maxFitness = generateMaxFitness();
 
-		array = new boolean[rNum][cNum];
+		
 	}
 
 	public void generateRandomSol() {
