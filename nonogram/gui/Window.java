@@ -37,7 +37,7 @@ public class Window extends JFrame implements ActionListener {
 		panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.SOUTH);
 
-		label = new JLabel("Press start to begin");
+		label = new JLabel("-------- Press start to begin -------");
 		panel.add(label, BorderLayout.CENTER);
 
 		buttonPanel = new JPanel();
@@ -79,6 +79,11 @@ public class Window extends JFrame implements ActionListener {
 
 		pack();
 	}
+        
+        public void setButton(){
+            	startButton.setText("Start");
+		startButton.setActionCommand("start");
+        }
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
@@ -89,8 +94,7 @@ public class Window extends JFrame implements ActionListener {
 			startButton.setActionCommand("stop");
 		} else if (event.getActionCommand().equals("stop")) {
 			main.cancelWorker();
-			startButton.setText("Start");
-			startButton.setActionCommand("start");
+			setButton();
 		} else if (event.getActionCommand().equals("load")) {
 			try {
 				JFileChooser chooser = new JFileChooser();

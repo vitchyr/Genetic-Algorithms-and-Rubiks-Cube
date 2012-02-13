@@ -1,13 +1,12 @@
 package nonogram;
 
-import nonogram.gui.Window;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import nonogram.gui.Window;
 
 public class Main {
 
@@ -61,6 +60,11 @@ public class Main {
             return null;
         }
 
+        @Override
+        public void done(){
+            	window.setButton();
+        }
+        
         @Override
         protected void process(List<boolean[][]> arrays) {
             Solution solution = new Solution(window.getNonogram());

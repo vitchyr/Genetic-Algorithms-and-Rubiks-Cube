@@ -22,6 +22,7 @@ public class Canvas extends JPanel {
 
     public void setNonogram(Nonogram nonogram) {
         this.nonogram = nonogram;
+        solution = null;
 
         int gridWidth = SQ_WIDTH * nonogram.getColumnHeaders().size();
         int gridHeight = SQ_WIDTH * nonogram.getRowHeaders().size();
