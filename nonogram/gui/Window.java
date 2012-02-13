@@ -24,7 +24,6 @@ public class Window extends JFrame implements ActionListener {
 	final JLabel label;
 	JPanel panel, buttonPanel;
 	JButton startButton, loadButton;
-	JTextField textfield;
 
 	public Window(Main main) {
 		super("Nonogram Genetic Algorithm");
@@ -50,13 +49,10 @@ public class Window extends JFrame implements ActionListener {
 		startButton.setActionCommand("start");
 		buttonPanel.add(startButton, BorderLayout.WEST);
 
-		loadButton = new JButton("Load:");
+		loadButton = new JButton("Load");
 		loadButton.addActionListener(this);
 		loadButton.setActionCommand("load");
 		buttonPanel.add(loadButton, BorderLayout.CENTER);
-
-		textfield = new JTextField(10);
-		buttonPanel.add(textfield, BorderLayout.CENTER);
 
 		setPreferredSize(new Dimension(400, 400));
 		pack();
@@ -105,10 +101,10 @@ public class Window extends JFrame implements ActionListener {
 					chooser.getSelectedFile().getName();// );
 				}
 
-				setNonogram(Main.nonogramFromFile(chooser.getSelectedFile()
-						.getName()));
+				setNonogram(Main.nonogramFromFile("puzzles/" + 
+                                        chooser.getSelectedFile().getName()));
 			} catch (Exception e) {
-
+                            System.err.println("Could not load file");
 			}
 
 		}
