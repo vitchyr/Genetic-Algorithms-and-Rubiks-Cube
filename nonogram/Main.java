@@ -92,7 +92,7 @@ public class Main {
             }
 
             crossover:
-            while (true) {
+            while (!haveSolution()) {
                 Solution parent1 = population.get(getWeightedRandom(weights));
                 Solution parent2 = population.get(getWeightedRandom(weights));
 
@@ -110,6 +110,10 @@ public class Main {
 
             population = newPopulation;
         }
+
+		private boolean haveSolution() {
+			return population.get(0).isComplete();
+		}
     };
 
     public int getWeightedRandom(int[] weights) {
