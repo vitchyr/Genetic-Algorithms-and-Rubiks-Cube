@@ -1,12 +1,21 @@
 package nonogram.gui;
 
-import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
-import nonogram.*;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import nonogram.Main;
+import nonogram.Nonogram;
+import nonogram.Solution;
 
 public class Window extends JFrame implements ActionListener {
 
@@ -42,6 +51,8 @@ public class Window extends JFrame implements ActionListener {
 		buttonPanel.add(startButton, BorderLayout.WEST);
 
 		loadButton = new JButton("Load:");
+		loadButton.addActionListener(this);
+		loadButton.setActionCommand("load");
 		buttonPanel.add(loadButton, BorderLayout.CENTER);
 
 		textfield = new JTextField(10);
@@ -85,6 +96,21 @@ public class Window extends JFrame implements ActionListener {
 			startButton.setText("Start");
 			startButton.setActionCommand("start");
 		} else if (event.getActionCommand().equals("load")) {
+			try {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setSelectedFile(new File("puzzles/" + "test1" + ".dat"));
+				int returnVal = chooser.showOpenDialog(this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					// System.out.println("You chose to open this file: " +
+					chooser.getSelectedFile().getName();// );
+				}
+
+				setNonogram(Main.nonogramFromFile(chooser.getSelectedFile()
+						.getName()));
+			} catch (Exception e) {
+
+			}
+
 		}
 	}
 }

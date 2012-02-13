@@ -18,7 +18,7 @@ public class Main {
     int gen;
 
     public Main() {
-        Nonogram nonogram = nonogramFromFile("test1");
+        Nonogram nonogram = nonogramFromFile("puzzles/" + "test1" + ".dat");
         random = new Random();
 
         window = new Window(this);
@@ -135,13 +135,13 @@ public class Main {
         return -1;
     }
 
-    public static Nonogram nonogramFromFile(String name) {
+    public static Nonogram nonogramFromFile(String location) {
         Nonogram nonogram = null;
 
         try {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(
-                    Main.class.getResourceAsStream("puzzles/" + name + ".dat")));
+                    Main.class.getResourceAsStream(location)));
 
             String line;
             while ((line = br.readLine()) != null) {
