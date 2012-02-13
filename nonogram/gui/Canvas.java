@@ -14,8 +14,8 @@ public class Canvas extends JPanel {
     Nonogram nonogram;
     Solution solution;
     int SQ_WIDTH = 20;
-    int LABEL_WIDTH = 60;
-    int LABEL_HEIGHT = 70;
+    int LABEL_WIDTH = 70;
+    int LABEL_HEIGHT = 80;
 
     public Canvas() {
     }

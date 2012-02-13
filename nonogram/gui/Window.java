@@ -54,7 +54,7 @@ public class Window extends JFrame implements ActionListener {
 		loadButton.setActionCommand("load");
 		buttonPanel.add(loadButton, BorderLayout.CENTER);
 
-		setPreferredSize(new Dimension(400, 400));
+		setPreferredSize(new Dimension(600, 600));
 		pack();
 		setVisible(true);
 	}
