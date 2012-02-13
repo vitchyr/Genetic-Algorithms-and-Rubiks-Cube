@@ -11,103 +11,107 @@ import nonogram.*;
 
 public class Canvas extends JPanel {
 
-    Nonogram nonogram;
-    Solution solution;
-    int SQ_WIDTH = 20;
-    int LABEL_WIDTH = 60;
-    int LABEL_HEIGHT = 70;
+	Nonogram nonogram;
+	Solution solution;
+	int SQ_WIDTH = 20;
+	int LABEL_WIDTH = 60;
+	int LABEL_HEIGHT = 70;
 
-    public Canvas() {
-    }
+	public Canvas() {
+	}
 
-    public void setNonogram(Nonogram nonogram) {
-        this.nonogram = nonogram;
+	public void setNonogram(Nonogram nonogram) {
+		this.nonogram = nonogram;
 
-        int gridWidth = SQ_WIDTH * nonogram.getColumnHeaders().size();
-        int gridHeight = SQ_WIDTH * nonogram.getRowHeaders().size();
+		int gridWidth = SQ_WIDTH * nonogram.getColumnHeaders().size();
+		int gridHeight = SQ_WIDTH * nonogram.getRowHeaders().size();
 
-        int panelWidth = gridWidth + LABEL_WIDTH;
-        int panelHeight = gridHeight + LABEL_HEIGHT;
+		int panelWidth = gridWidth + LABEL_WIDTH;
+		int panelHeight = gridHeight + LABEL_HEIGHT;
 
-        setPreferredSize(new Dimension(panelWidth, panelHeight));
-        repaint();
-    }
+		setPreferredSize(new Dimension(panelWidth, panelHeight));
+		repaint();
+	}
 
-    @Override
-    public void paintComponent(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, getBounds().width, getBounds().height);
-        
-        int xMax = LABEL_WIDTH + nonogram.getColumnHeaders().size() * SQ_WIDTH;
-        int yMax = LABEL_HEIGHT + nonogram.getRowHeaders().size() * SQ_WIDTH;
+	@Override
+	public void paintComponent(Graphics g) {
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, getBounds().width, getBounds().height);
 
-        int x = LABEL_WIDTH;
-        int y = LABEL_HEIGHT;
+		if (nonogram != null) {
 
-        if (solution != null) {
-            g.setColor(Color.BLACK);
-            for (int i = 0; i < nonogram.getColumnHeaders().size(); i++) {
+			int xMax = LABEL_WIDTH + nonogram.getColumnHeaders().size()
+					* SQ_WIDTH;
+			int yMax = LABEL_HEIGHT + nonogram.getRowHeaders().size()
+					* SQ_WIDTH;
 
-                for (int j = 0; j < nonogram.getRowHeaders().size(); j++) {
+			int x = LABEL_WIDTH;
+			int y = LABEL_HEIGHT;
 
-                    if (solution.getArray()[j][i]) {
-                        g.fillRect(x + 2, y + 2, SQ_WIDTH - 3, SQ_WIDTH - 3);
-                    }
-                    y += SQ_WIDTH;
-                }
+			if (solution != null) {
+				g.setColor(Color.BLACK);
+				for (int i = 0; i < nonogram.getColumnHeaders().size(); i++) {
 
-                x += SQ_WIDTH;
-                y = LABEL_HEIGHT;
-            }
-        }
+					for (int j = 0; j < nonogram.getRowHeaders().size(); j++) {
 
-        x = LABEL_WIDTH;
-        y = LABEL_HEIGHT;
+						if (solution.getArray()[j][i]) {
+							g.fillRect(x + 2, y + 2, SQ_WIDTH - 3, SQ_WIDTH - 3);
+						}
+						y += SQ_WIDTH;
+					}
 
-        g.setColor(Color.GRAY);
-        for (ArrayList<Integer> header : nonogram.getColumnHeaders()) {
-            g.setColor(Color.GRAY);
-            g.drawLine(x, 0, x, yMax);
+					x += SQ_WIDTH;
+					y = LABEL_HEIGHT;
+				}
+			}
 
-            int step = 15;
-            int yLabel = 15;
+			x = LABEL_WIDTH;
+			y = LABEL_HEIGHT;
 
-            for (Integer number : header) {
-                g.drawString(number.toString(), x + 6, yLabel);
-                yLabel += step;
-            }
+			g.setColor(Color.GRAY);
+			for (ArrayList<Integer> header : nonogram.getColumnHeaders()) {
+				g.setColor(Color.GRAY);
+				g.drawLine(x, 0, x, yMax);
 
-            x += SQ_WIDTH;
-        }
-        g.drawLine(x, 0, x, yMax);
+				int step = 15;
+				int yLabel = 15;
 
-        for (ArrayList<Integer> header : nonogram.getRowHeaders()) {
-            g.drawLine(0, y, xMax, y);
-            y += SQ_WIDTH;
+				for (Integer number : header) {
+					g.drawString(number.toString(), x + 6, yLabel);
+					yLabel += step;
+				}
 
-            String label = "";
+				x += SQ_WIDTH;
+			}
+			g.drawLine(x, 0, x, yMax);
 
-            for (Integer number : header) {
-                label += number.toString() + " ";
-            }
+			for (ArrayList<Integer> header : nonogram.getRowHeaders()) {
+				g.drawLine(0, y, xMax, y);
+				y += SQ_WIDTH;
 
-            g.drawString(label, 5, y - 5);
-        }
-        g.drawLine(0, y, xMax, y);
-        
-    }
+				String label = "";
 
-    public void setSolution(Solution solution) {
-        this.solution = solution;
-        solution.evaluate();
-        this.repaint();
-    }
-    
-    public Solution getSolution(){
-        return solution;
-    }
+				for (Integer number : header) {
+					label += number.toString() + " ";
+				}
 
-    public Nonogram getNonogram() {
-        return nonogram;
-    }
+				g.drawString(label, 5, y - 5);
+			}
+			g.drawLine(0, y, xMax, y);
+		}
+	}
+
+	public void setSolution(Solution solution) {
+		this.solution = solution;
+		solution.evaluate();
+		this.repaint();
+	}
+
+	public Solution getSolution() {
+		return solution;
+	}
+
+	public Nonogram getNonogram() {
+		return nonogram;
+	}
 }

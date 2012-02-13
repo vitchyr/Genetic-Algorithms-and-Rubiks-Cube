@@ -1,177 +1,191 @@
 package nonogram;
 
-import nonogram.gui.Window;
-
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+import nonogram.gui.Window;
+
 public class Main {
 
-    final Window window;
-    Random random;
-    AlgorithmWorker worker;
-    boolean cancelTask;
-    int gen;
+	final Window window;
+	Random random;
+	AlgorithmWorker worker;
+	boolean cancelTask;
+	int gen;
 
-    public Main() {
-        Nonogram nonogram = nonogramFromFile("puzzles/" + "test1" + ".dat");
-        random = new Random();
+	public Main() {
+		// Nonogram nonogram = nonogramFromFile("puzzles/" + "test1" + ".dat");
+		random = new Random();
 
-        window = new Window(this);
-        window.setNonogram(nonogram);
-    }
+		window = new Window(this);
+		// window.setNonogram(nonogram);
+	}
 
-    private class AlgorithmWorker extends SwingWorker<Void, boolean[][]> {
+	private class AlgorithmWorker extends SwingWorker<Void, boolean[][]> {
 
-        ArrayList<Solution> population;
-        static final int POP_SIZE = 50;
-        static final int ELITE_SIZE = 2;
+		ArrayList<Solution> population;
+		static final int POP_SIZE = 50;
+		static final int ELITE_SIZE = 2;
 
-        public AlgorithmWorker(Solution seedSolution) {
-            super();
+		public AlgorithmWorker(Solution seedSolution) {
+			super();
 
-            population = new ArrayList();
-            
-            if (seedSolution != null) {
-                population.add(seedSolution);
-            }
+			population = new ArrayList();
 
-            while (population.size() < POP_SIZE) {
-                Solution solution = new Solution(window.getNonogram());
-                solution.generateRandomSol();
+			if (seedSolution != null) {
+				population.add(seedSolution);
+			}
 
-                population.add(solution);
-            }
-        }
+			while (population.size() < POP_SIZE) {
+				Solution solution = new Solution(window.getNonogram());
+				solution.generateRandomSol();
 
-        @Override
-        public Void doInBackground() {
-            while (!cancelTask && !haveSolution()) {
-                doGeneration();
-                gen++;
+				population.add(solution);
+			}
+		}
 
-                publish(population.get(0).getArray());
+		@Override
+		public Void doInBackground() {
+			while (!cancelTask && !haveSolution()) {
+				doGeneration();
+				gen++;
 
-            }
+				publish(population.get(0).getArray());
 
-            return null;
-        }
+			}
+			if (haveSolution()) {
+				cancelWorker();
+			}
 
-        @Override
-        protected void process(List<boolean[][]> arrays) {
-            Solution solution = new Solution(window.getNonogram());
-            solution.setArray(arrays.get(arrays.size() - 1));
-            window.setSolution(solution);
+			return null;
+		}
 
-            solution.evaluate();
-            window.setLabelText(gen, solution.getFitness());
-        }
+		@Override
+		protected void process(List<boolean[][]> arrays) {
+			Solution solution = new Solution(window.getNonogram());
+			solution.setArray(arrays.get(arrays.size() - 1));
+			window.setSolution(solution);
 
-        public void doGeneration() {
-            for (Solution solution : population) {
-                solution.evaluate();
-            }
+			solution.evaluate();
+			window.setLabelText(gen, solution.getFitness());
+		}
 
-            Comparator comparator = Collections.reverseOrder();
-            Collections.sort(population, comparator);
+		public void doGeneration() {
+			for (Solution solution : population) {
+				solution.evaluate();
+			}
 
-            ArrayList<Solution> newPopulation = new ArrayList();
+			Comparator comparator = Collections.reverseOrder();
+			Collections.sort(population, comparator);
 
-            //Elitism
-            for (int i = 0; i < ELITE_SIZE; i++) {
-                newPopulation.add(population.get(i));
-            }
+			ArrayList<Solution> newPopulation = new ArrayList();
 
-            int[] weights = new int[population.size()];
-            for (int i = 0; i < population.size(); i++) {
-                weights[i] = population.get(i).getFitness();
-            }
+			// Elitism
+			for (int i = 0; i < ELITE_SIZE; i++) {
+				newPopulation.add(population.get(i));
+			}
 
-            crossover:
-            while (!haveSolution()) {
-                Solution parent1 = population.get(getWeightedRandom(weights));
-                Solution parent2 = population.get(getWeightedRandom(weights));
+			int[] weights = new int[population.size()];
+			for (int i = 0; i < population.size(); i++) {
+				weights[i] = population.get(i).getFitness();
+			}
 
-                Solution[] offspring = parent1.crossover(parent2, random.nextFloat());
+			crossover: while (!haveSolution()) {
+				Solution parent1 = population.get(getWeightedRandom(weights));
+				Solution parent2 = population.get(getWeightedRandom(weights));
 
-                for (int i = 0; i < 2; i++) {
-                    offspring[i].mutate();
-                    newPopulation.add(offspring[i]);
+				Solution[] offspring = parent1.crossover(parent2,
+						random.nextFloat());
 
-                    if (newPopulation.size() == POP_SIZE - ELITE_SIZE) {
-                        break crossover;
-                    }
-                }
-            }
+				for (int i = 0; i < 2; i++) {
+					offspring[i].mutate();
+					newPopulation.add(offspring[i]);
 
-            population = newPopulation;
-        }
+					if (newPopulation.size() == POP_SIZE - ELITE_SIZE) {
+						break crossover;
+					}
+				}
+			}
+
+			population = newPopulation;
+		}
 
 		private boolean haveSolution() {
 			return population.get(0).isComplete();
 		}
-    };
+	};
 
-    public int getWeightedRandom(int[] weights) {
-        float[] runningTotals = new float[weights.length];
+	public int getWeightedRandom(int[] weights) {
+		float[] runningTotals = new float[weights.length];
 
-        runningTotals[0] = weights[0];
-        for (int i = 1; i < weights.length; i++) {
-            runningTotals[i] = runningTotals[i - 1] + (float) weights[i];
-        }
+		runningTotals[0] = weights[0];
+		for (int i = 1; i < weights.length; i++) {
+			runningTotals[i] = runningTotals[i - 1] + (float) weights[i];
+		}
 
-        float randomNumber = random.nextFloat();
+		float randomNumber = random.nextFloat();
 
-        for (int i = 0; i < weights.length; i++) {
-            if (randomNumber < runningTotals[i]) {
-                return i;
-            }
-        }
+		for (int i = 0; i < weights.length; i++) {
+			if (randomNumber < runningTotals[i]) {
+				return i;
+			}
+		}
 
-        return -1;
-    }
+		return -1;
+	}
 
-    public static Nonogram nonogramFromFile(String location) {
-        Nonogram nonogram = null;
+	public static Nonogram nonogramFromFile(String location) {
+		Nonogram nonogram = null;
 
-        try {
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader(
-                    Main.class.getResourceAsStream(location)));
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(location));
+			// new InputStreamReader(
+			// Main.class.getResourceAsStream(location)));
 
-            String line;
-            while ((line = br.readLine()) != null) {
-                nonogram = Nonogram.fromFile(line);
-            }
+			String line;
+			while ((line = br.readLine()) != null) {
+				try {
+					nonogram = Nonogram.fromFile(line);
 
-        } catch (IOException e) {
-            System.err.println("File not found");
-        }
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
 
-        return nonogram;
-    }
+		} catch (IOException e) {
+			System.err.println("File not found");
+		}
 
-    public void startWorker(Solution solution) {
-        cancelTask = false;
-        worker = new AlgorithmWorker(solution);
-        worker.execute();
-    }
+		return nonogram;
+	}
 
-    public void cancelWorker() {
-        cancelTask = true;
-    }
+	public void startWorker(Solution solution) {
+		cancelTask = false;
+		worker = new AlgorithmWorker(solution);
+		worker.execute();
+	}
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
+	public void cancelWorker() {
+		cancelTask = true;
+	}
 
-            @Override
-            public void run() {
-                new Main();
-            }
-        });
-    }
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				new Main();
+			}
+		});
+	}
 }

@@ -48,8 +48,11 @@ public class Window extends JFrame implements ActionListener {
 		startButton = new JButton("Start");
 		startButton.addActionListener(this);
 		startButton.setActionCommand("start");
+		startButton.setEnabled(false);
 		buttonPanel.add(startButton, BorderLayout.WEST);
 
+		
+		
 		loadButton = new JButton("Load:");
 		loadButton.addActionListener(this);
 		loadButton.setActionCommand("load");
@@ -87,10 +90,11 @@ public class Window extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getActionCommand().equals("start")) {
-
-			main.startWorker(canvas.getSolution());
-			startButton.setText("Stop");
-			startButton.setActionCommand("stop");
+			if (canvas.getNonogram() != null) {
+				main.startWorker(canvas.getSolution());
+				startButton.setText("Stop");
+				startButton.setActionCommand("stop");
+			}
 		} else if (event.getActionCommand().equals("stop")) {
 			main.cancelWorker();
 			startButton.setText("Start");
@@ -101,14 +105,18 @@ public class Window extends JFrame implements ActionListener {
 				chooser.setSelectedFile(new File("puzzles/" + "test1" + ".dat"));
 				int returnVal = chooser.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					// System.out.println("You chose to open this file: " +
-					chooser.getSelectedFile().getName();// );
+					 System.out.println("You chose to open this file: " +
+					chooser.getSelectedFile().getAbsolutePath() );
 				}
 
 				setNonogram(Main.nonogramFromFile(chooser.getSelectedFile()
-						.getName()));
+						.getAbsolutePath()));
+				
+				startButton.setEnabled(true);
 			} catch (Exception e) {
-
+				System.out.println(e);
+				System.out.println(e.getCause());
+				System.err.println("Problem in main method");
 			}
 
 		}
