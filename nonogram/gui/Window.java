@@ -51,17 +51,12 @@ public class Window extends JFrame implements ActionListener {
 		startButton.setEnabled(false);
 		buttonPanel.add(startButton, BorderLayout.WEST);
 
-		
-		
-		loadButton = new JButton("Load:");
+		loadButton = new JButton("Load");
 		loadButton.addActionListener(this);
 		loadButton.setActionCommand("load");
 		buttonPanel.add(loadButton, BorderLayout.CENTER);
 
-		textfield = new JTextField(10);
-		buttonPanel.add(textfield, BorderLayout.CENTER);
-
-		setPreferredSize(new Dimension(400, 400));
+		setPreferredSize(new Dimension(600, 600));
 		pack();
 		setVisible(true);
 	}
@@ -105,8 +100,8 @@ public class Window extends JFrame implements ActionListener {
 				chooser.setSelectedFile(new File("puzzles/" + "test1" + ".dat"));
 				int returnVal = chooser.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					 System.out.println("You chose to open this file: " +
-					chooser.getSelectedFile().getAbsolutePath() );
+					// System.out.println("You chose to open this file: " +
+					chooser.getSelectedFile().getName();// );
 				}
 
 				setNonogram(Main.nonogramFromFile(chooser.getSelectedFile()
