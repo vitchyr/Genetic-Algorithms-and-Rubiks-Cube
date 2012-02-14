@@ -67,27 +67,32 @@ public class Main {
 			if (haveSolution()) {
 				cancelWorker();
 			}
-
-        @Override
-        public void done(){
-            	window.setButton();
-        }
-        
-        @Override
-        protected void process(List<boolean[][]> arrays) {
-            Solution solution = new Solution(window.getNonogram());
-            solution.setArray(arrays.get(arrays.size() - 1));
-            window.setSolution(solution);
-
-		@Override
-		protected void process(List<boolean[][]> arrays) {
-			Solution solution = new Solution(window.getNonogram());
-			solution.setArray(arrays.get(arrays.size() - 1));
-			window.setSolution(solution);
-
-			solution.evaluate();
-			window.setLabelText(gen, solution.getFitness());
+			return null;
 		}
+
+		
+		
+		@Override
+		public void done() {
+			window.setButton();
+		}
+
+//		@Override
+//		protected void process(List<boolean[][]> arrays) {
+//			Solution solution = new Solution(window.getNonogram());
+//			solution.setArray(arrays.get(arrays.size() - 1));
+//			window.setSolution(solution);
+//		}
+//
+//		@Override
+//		protected void process(List<boolean[][]> arrays) {
+//			Solution solution = new Solution(window.getNonogram());
+//			solution.setArray(arrays.get(arrays.size() - 1));
+//			window.setSolution(solution);
+//
+//			solution.evaluate();
+//			window.setLabelText(gen, solution.getFitness());
+//		}
 
 		public void doGeneration() {
 			for (Solution solution : population) {
