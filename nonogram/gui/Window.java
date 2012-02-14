@@ -77,7 +77,8 @@ public class Window extends JFrame implements ActionListener {
 
 	public void setLabelText(int gen, int fitness) {
 		label.setText("Generation: " + Integer.toString(gen) + "   "
-				+ "Highest fitness: " + Integer.toString(fitness));
+				+ "Highest fitness: " + Integer.toString(fitness)
+				+ "    Max Fitness: " + Integer.toString(canvas.getSolution().getMaxFitness()));
 
 		pack();
 	}
@@ -106,7 +107,7 @@ public class Window extends JFrame implements ActionListener {
 
 				setNonogram(Main.nonogramFromFile(chooser.getSelectedFile()
 						.getAbsolutePath()));
-				
+
 				startButton.setEnabled(true);
 			} catch (Exception e) {
 				System.out.println(e);

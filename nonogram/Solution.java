@@ -14,7 +14,7 @@ public class Solution implements Comparable<Solution> {
 	public static final boolean ON = true;
 	public static final boolean OFF = false;
 	public static final int WEIGHT_RIGHT_SIZE = 5;
-	public static final int WEIGHT_RIGHT_VALUE = 2;
+	public static final int WEIGHT_RIGHT_VALUE = 5;
 	public static final int WEIGHT_RIGHT_TOTAL = 1;
 	public static double MUTATION_RATE = .2;
 
