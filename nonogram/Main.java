@@ -12,6 +12,7 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import nonogram.gui.Window;
 
 import nonogram.gui.Window;
 
@@ -67,8 +68,16 @@ public class Main {
 				cancelWorker();
 			}
 
-			return null;
-		}
+        @Override
+        public void done(){
+            	window.setButton();
+        }
+        
+        @Override
+        protected void process(List<boolean[][]> arrays) {
+            Solution solution = new Solution(window.getNonogram());
+            solution.setArray(arrays.get(arrays.size() - 1));
+            window.setSolution(solution);
 
 		@Override
 		protected void process(List<boolean[][]> arrays) {
