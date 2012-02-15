@@ -25,6 +25,7 @@ public class Window extends JFrame implements ActionListener {
 	JPanel panel, buttonPanel;
 	JButton startButton, loadButton;
 	JTextField textfield;
+	int storedFitness;
 
 	public Window(Main main) {
 		super("Nonogram Genetic Algorithm");
@@ -76,9 +77,15 @@ public class Window extends JFrame implements ActionListener {
 	}
 
 	public void setLabelText(int gen, int fitness) {
-		label.setText("Generation: " + Integer.toString(gen) + "   "
-				+ "Highest fitness: " + Integer.toString(fitness)
-				+ "    Max Fitness: " + Integer.toString(canvas.getSolution().getMaxFitness()));
+		if (canvas.getSolution().getFitness() > storedFitness) {
+			storedFitness = canvas.getSolution().getFitness();
+		}
+		
+		String s = "Generation: " + Integer.toString(gen) + "   "
+				+ "Highest fitness: " + Integer.toString(storedFitness)
+				+ "    Max Fitness: " + Integer.toString(canvas.getSolution().getMaxFitness());
+				
+		label.setText(s);
 
 		pack();
 	}

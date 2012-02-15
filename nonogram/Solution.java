@@ -13,10 +13,10 @@ public class Solution implements Comparable<Solution> {
 
 	public static final boolean ON = true;
 	public static final boolean OFF = false;
-	public static final int WEIGHT_RIGHT_SIZE = 5;
+	public static final int WEIGHT_RIGHT_SIZE = 10;
 	public static final int WEIGHT_RIGHT_VALUE = 5;
 	public static final int WEIGHT_RIGHT_TOTAL = 1;
-	public static double MUTATION_RATE = .2;
+	public static double MUTATION_RATE = .07;
 
 	public Solution(Nonogram nonogram) {
 		rNum = nonogram.getRowHeaders().size();
@@ -41,22 +41,22 @@ public class Solution implements Comparable<Solution> {
 	public void mutate() {
 		Random randGen = new Random();
 
-		if (randGen.nextBoolean()) {
-		
+//		if (randGen.nextBoolean()) {
+//		
 			for (int r = 0; r < array.length; r++) {
 				if (randGen.nextDouble() < MUTATION_RATE) {
 					array[r] = mutateLine(array[r], getNonogram()
 							.getRowHeaders().get(r));
 				}
 			}
-		} else {
+//		} else {
 			for (int c = 0; c < array.length; c++) {
 				if (randGen.nextDouble() < MUTATION_RATE) {
 					setColumn(c, mutateLine(getCol(array, c), getNonogram()
 							.getColumnHeaders().get(c)));
 				}
 			}
-		}
+//		}
 
 		// for (int r = 0; r < array.length; r++) {
 		// if (randGen.nextDouble() < MUTATION_RATE) {

@@ -63,9 +63,10 @@ public class Main {
 				doGeneration();
 				gen++;
 
-				publish(population.get(0).getArray());
+				publish(population.get((int)(Math.random()*population.size())).getArray());
 
 			}
+			publish(population.get(0).getArray());
 			if (haveSolution()) {
 				cancelWorker();
 			}
