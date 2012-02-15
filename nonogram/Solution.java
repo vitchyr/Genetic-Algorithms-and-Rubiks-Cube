@@ -22,11 +22,10 @@ public class Solution implements Comparable<Solution> {
 		rNum = nonogram.getRowHeaders().size();
 		cNum = nonogram.getColumnHeaders().size();
 		this.nonogram = nonogram;
-		
+
 		array = new boolean[rNum][cNum];
 		maxFitness = generateMaxFitness();
 
-		
 	}
 
 	public void generateRandomSol() {
@@ -42,14 +41,85 @@ public class Solution implements Comparable<Solution> {
 	public void mutate() {
 		Random randGen = new Random();
 
-		for (int r = 0; r < array.length; r++) {
+		if (randGen.nextBoolean()) {
+		
+			for (int r = 0; r < array.length; r++) {
+				if (randGen.nextDouble() < MUTATION_RATE) {
+					array[r] = mutateLine(array[r], getNonogram()
+							.getRowHeaders().get(r));
+				}
+			}
+		} else {
 			for (int c = 0; c < array.length; c++) {
 				if (randGen.nextDouble() < MUTATION_RATE) {
-					array[r][c] = !array[r][c];
+					setColumn(c, mutateLine(getCol(array, c), getNonogram()
+							.getColumnHeaders().get(c)));
 				}
 			}
 		}
 
+		// for (int r = 0; r < array.length; r++) {
+		// if (randGen.nextDouble() < MUTATION_RATE) {
+		// array[r][c] = !array[r][c];
+		// }
+		// }
+		// for (int c = 0; c < array.length; c++) {
+		// if (randGen.nextDouble() < MUTATION_RATE) {
+		// array[r][c] = !array[r][c];
+		// }
+
+	}
+
+	private void setColumn(int c, boolean[] mutateLine) {
+		for(int i = 0; i < mutateLine.length; i++) {
+			array[i][c] = mutateLine[i];
+		}
+		
+	}
+
+	private boolean[] mutateLine(boolean[] bs, ArrayList<Integer> arrayList) {
+		ArrayList<Integer> bsList = getTally(bs);
+		int cellsNeeded = getSum(arrayList) + arrayList.size() - 1;
+		int used = 0;
+		int currentInRow = 0;
+		int currentGroup = 0;
+
+		// Create new bsList
+		for (int i = 0; i < bs.length; i++) {
+			// If in the middle of a streak
+			if (i > 0 && bs[i - 1]) {
+				// Check if should continue
+				if (currentInRow < arrayList.get(currentGroup)) {
+					bs[i] = true;
+					currentInRow++;
+					used++;
+					// Or end the current streak and move on
+				} else if (currentInRow == arrayList.get(currentGroup)) {
+					bs[i] = false;
+					currentInRow = 0;
+					used++;
+					currentGroup++;
+				}
+			} else {
+
+				double chanceNext = ((double)cellsNeeded - (double)used) / ((double)bs.length - (double)used);
+				double rand = Math.random();
+				
+				if (rand < chanceNext) {
+					// If chance of adding is correct
+					bs[i] = true;
+					currentInRow = 1;
+					used++;
+				} else {
+					bs[i] = false;
+				}
+			}
+		}
+
+		// //Encourage the correct number of clumps
+		// int deltaGroups = arrayList.size() - bsList.size();
+
+		return bs;
 	}
 
 	public Solution[] crossover(Solution solution, float random) {
@@ -236,7 +306,7 @@ public class Solution implements Comparable<Solution> {
 			f += getMaxScore(col.get(b), getCol(array, b));
 		}
 
-//		fitness = fitness;
+		// fitness = fitness;
 
 		return f;
 	}
@@ -266,7 +336,7 @@ public class Solution implements Comparable<Solution> {
 			// }
 		}
 
-//		score = score;
+		// score = score;
 		return score;
 	}
 
