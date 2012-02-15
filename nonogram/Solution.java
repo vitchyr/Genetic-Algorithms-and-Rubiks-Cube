@@ -137,7 +137,7 @@ public class Solution implements Comparable<Solution> {
 		for (int i = 0; i < array.length; i++) {
 			for (int j = 0; j < array[i].length; j++) {
 
-				if (random > (float) ((i * j) / (array.length * array[i].length))) {
+				if (random > (float) ((i +  j * array.length) / (array.length * array[i].length))) {
 					offspring[0].getArray()[i][j] = this.array[i][j];
 					offspring[1].getArray()[i][j] = solution.getArray()[i][j];
 				} else {
